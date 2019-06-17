@@ -3,12 +3,10 @@
 namespace App\Console\Commands;
 
 use App\Model\Master\Item;
-use App\Model\Master\ItemUnit;
 use App\Model\Project\Project;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
-use App\Model\Accounting\ChartOfAccount;
 
 class AlterData extends Command
 {
@@ -49,8 +47,6 @@ class AlterData extends Command
             config()->set('database.connections.tenant.database', env('DB_DATABASE').'_'.strtolower($project->code));
             DB::connection('tenant')->reconnect();
 
-            $account = ChartOfAccount::where('name', 'sediaan barang jadi (manufaktur)')->first();
-
             $items = [
                 'B001 REGULER BUBUK 250GR',
                 'B005 REGULER KOPI GULA 20GR',
@@ -65,27 +61,9 @@ class AlterData extends Command
             ];
 
             for ($i = 0; $i < count($items); $i++) {
-                if (Item::where('name', $items[$i])->first()) {
-                    continue;
-                }
-                $item = new Item;
-                $item->chart_of_account_id = $account->id;
-                $item->name = $items[$i];
+                $item = Item::where('name', $items[$i])->first();
+                $item->code = explode(' ', $items[$i])[0];
                 $item->save();
-
-                $units = [
-                    [
-                        'label' => 'pcs',
-                        'name' => 'pcs'
-                    ],
-                ];
-                $unitsToBeInserted = [];
-                foreach ($units as $unit) {
-                    $itemUnit = new ItemUnit();
-                    $itemUnit->fill($unit);
-                    array_push($unitsToBeInserted, $itemUnit);
-                }
-                $item->units()->saveMany($unitsToBeInserted);
             }
         }
     }
