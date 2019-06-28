@@ -14,6 +14,8 @@
 Route::prefix('v1')->namespace('Api')->group(function () {
     Route::post('register', 'RegisterController@store');
 
+    require base_path('routes/api/payment-gateway/xendit.php');
+
     Route::prefix('auth')->namespace('Auth')->group(function () {
         Route::post('login', 'LoginController@index');
         Route::post('fetch', 'FetchController@index');
