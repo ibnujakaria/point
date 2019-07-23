@@ -50,6 +50,6 @@ Route::prefix('v1')->namespace('Api')->group(function () {
 
     // These routes below using client_credentials tokens for the authentication
     Route::middleware('client')->group(function () {
-        require base_path('routes/api/setting.php');
+        require base_path('routes/api/reward.php');
     });
 });

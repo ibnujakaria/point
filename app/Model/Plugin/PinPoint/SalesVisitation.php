@@ -4,13 +4,10 @@ namespace App\Model\Plugin\PinPoint;
 
 use App\Model\Form;
 use App\Model\PointModel;
-use App\Model\Rewardable;
-use App\Model\Reward\Point;
-use App\Model\SettingReward;
 use App\Model\Master\Customer;
 use Illuminate\Support\Facades\DB;
 
-class SalesVisitation extends PointModel implements Rewardable
+class SalesVisitation extends PointModel
 {
     protected $connection = 'tenant';
 
@@ -61,11 +58,6 @@ class SalesVisitation extends PointModel implements Rewardable
         return $this->hasMany(SalesVisitationDetail::class);
     }
 
-    public function reward()
-    {
-        return $this->morphOne(Point::class, 'rewardable');
-    }
-
     public static function call($dateFrom, $dateTo, $userId)
     {
         $query = self::join('forms', 'forms.id', '=', 'pin_point_sales_visitations.form_id')
@@ -111,24 +103,5 @@ class SalesVisitation extends PointModel implements Rewardable
             ->first();
 
         return $query ? $query->value : 0;
-    }
-
-    /**
-     * Here we can define the amount of point the user will get.
-     */
-    public static function getPointAmount() : int
-    {
-        // we can easly get it from database
-        return SettingReward::getSettingByModel(static::class)->amount;
-    }
-
-    public static function getActionName() : string
-    {
-        return 'Sales Visitation';
-    }
-
-    public static function isRewardableActive() : bool
-    {
-        return SettingReward::getSettingByModel(static::class)->is_rewardable_active;
     }
 }

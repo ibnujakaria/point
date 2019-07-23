@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateSettingRewardsTable extends Migration
+class CreateTokenGeneratorsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class CreateSettingRewardsTable extends Migration
      */
     public function up()
     {
-        Schema::create('setting_rewards', function (Blueprint $table) {
+        Schema::create('token_generators', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->string('model', 100);
-            $table->integer('amount')->default(0);
-            $table->boolean('is_rewardable_active')->default(true);
+            $table->string('source');
+            $table->unsignedInteger('amount');
+            $table->boolean('is_active')->default(false);
             $table->timestamps();
         });
     }
@@ -29,6 +29,6 @@ class CreateSettingRewardsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('setting_rewards');
+        Schema::dropIfExists('token_generators');
     }
 }
