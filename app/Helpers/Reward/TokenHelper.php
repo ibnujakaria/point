@@ -18,5 +18,7 @@ class TokenHelper
         ]);
 
         $token->save();
+
+        return $token;
     }
 }
