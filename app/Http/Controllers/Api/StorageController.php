@@ -56,6 +56,22 @@ class StorageController extends Controller
         return new ApiCollection($cloudStorages);
     }
 
+    public function update(Request $request, $id)
+    {
+        $cloudStorage = CloudStorage::findOrFail($id);
+
+        DB::beginTransaction();
+
+        if ($cloudStorage && $cloudStorage->key == $request->get('key')) {
+            $cloudStorage->notes = $request->get('notes');
+            $cloudStorage->save();
+        }
+
+        DB::commit();
+
+        return response()->json([], 204);
+    }
+
     public function destroy(Request $request, $id)
     {
         $cloudStorage = CloudStorage::findOrFail($id);
